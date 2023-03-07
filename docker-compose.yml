@@ -1,0 +1,62 @@
+version: "3.7"
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  network:
+    driver: bridge
+
+services:
+  auth:
+    container_name: auth
+    image: quay.io/keycloak/keycloak
+    ports:
+      - "8080:8080"
+    restart: "unless-stopped"
+    expose:
+      - '8080'
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./ree_dzenan_realm.json:/opt/keycloak/data/import/ree_dzenan.json
+    networks:
+      - network
+
+  mysqldb:
+    container_name: mysqldb
+    image: mysql/mysql-server:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: "unless-stopped"
+    expose:
+      - '3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - network
+
+#  synonyms-register:
+#    container_name: synonyms-register
+#    image: synonyms-register:latest
+#    ports:
+#      - "8081:8081"
+#    expose:
+#      - '8081'
+#    restart: "unless-stopped"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/synonyms?createDatabaseIfNotExist=true
+#      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://auth:8080/realms/ree_dzenan
+#      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: http://auth:8080/realms/ree_dzenan/protocol/openid-connect/certs
+#    depends_on:
+#      - mysqldb
+#      - auth
+#    networks:
+#      - network
