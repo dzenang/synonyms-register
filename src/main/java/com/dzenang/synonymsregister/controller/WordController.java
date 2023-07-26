@@ -29,8 +29,12 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ROLE_writer')")
 public class WordController {
 
+    private final WordService wordService;
+
     @Autowired
-    private WordService wordService;
+    public WordController(WordService wordService) {
+        this.wordService = wordService;
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_writer', 'ROLE_reader')")

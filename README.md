@@ -9,7 +9,7 @@ SpringBoot3 REST api for registering synonyms using MySQL db for storage and Key
 ### How to run locally
 1. Clone the project and navigate to synonyms-register project folder in terminal
 2. Make sure you have docker set up on your local machine
-3. Run `docker-compose up`  
+3. Run `docker-compose up -d`  
    (this will start keycloak container, import realm and start db container)
 4. Run `docker exec -it mysqldb mysql -uroot -proot` to access mysql shell
 5. Run `UPDATE mysql.user SET host='%' WHERE user='root';` and `FLUSH PRIVILEGES;`  
